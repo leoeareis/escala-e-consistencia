@@ -1,0 +1,17 @@
+pages:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+  script:
+    # KLUDGE: we need a public directory in which the container can write to.
+    - mkdir -p public
+    - docker run --rm --tty --volume "$(pwd):$(pwd):ro" --volume "$(pwd)/public:$(pwd)/public" --workdir="$(pwd)" --user "$(id -u):$(id -g)" --env "HOME=/home/emacs" --entrypoint make rjfonseca/emacs:latest -B all
+  artifacts:
+    paths:
+      - public
+  only:
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

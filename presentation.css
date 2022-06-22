@@ -1,0 +1,18 @@
+body {
+  font-family: filson-soft, sans-serif !important;
+  font-style: normal;
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #003f84 !important;
+}
+
+ul {
+  color: #3c3c3c !important;
+}

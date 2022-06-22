@@ -1,0 +1,176 @@
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: white
+#+REVEAL_EXTRA_CSS: presentation.css
+#+REVEAL_TITLE_SLIDE_BACKGROUND: ./img/logo.png
+#+REVEAL_TITLE_SLIDE_BACKGROUND_SIZE: 50px
+#+REVEAL_TITLE_SLIDE_BACKGROUND_POSITION: top left
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND: ./img/logo.png
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_SIZE: 50px
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_POSITION: top left
+#+REVEAL_TOC_SLIDE_BACKGROUND: ./img/logo.png
+#+REVEAL_TOC_SLIDE_BACKGROUND_SIZE: 50px
+#+REVEAL_TOC_SLIDE_BACKGROUND_POSITION: top left
+#+OPTIONS: toc:1 timestamp:nil num:nil
+:END:
+
+# Azul Bolder: #003F84
+# Dark: #3C3C3C
+# Verde Success #00D59B
+# Rosa Pink: #FF3A88
+# Vermelho Warning: #FF333C
+# Laranja Alert: #FF9B40
+# Amarelo Attention: #FFDD24
+
+#+TITLE: Migrando +1 Bilhão de Documentos
+#+SUBTITLE: de forma contínua
+#+AUTHOR: Carlos Martinez e Rodrigo Fonseca
+#+EXPORT_FILE_NAME: public/index.html
+
+# https://thedevconf.com/call4papers
+# https://cfp-bus.thedevconf.com.br/
+# BigData and NoSQL
+
+# Summary of your presentation, for the attendee
+# Vamos falar sobre como nossa arquitetura foi evoluindo ao longo do tempo para lidar com volumes cada vez maiores de documentos até culminar com nossa primeira migração de mais de 1 bilhão de documentos e como isso se tornou uma tarefa recorrente e trivial para o time.
+# Private message: tell us more about the presentation! Which references do you intend to use? How did you get interested in this area?
+# Para essa apresentação vamos falar da nossa experiência prática com uma arquitetura que evoluiu de um MVP até algo que serve bilhões de documentos com baixa latência e está em constante evolução. Queremos compartilhar as dificuldades e motivações por traz de grandes migrações e a solução que criamos para resolver essas dores.
+
+* Quem somos
+** Carlos Martinez
+#+REVEAL_HTML: <div class="column" style="float:left; width: 30%">
+#+ATTR_HTML: :width 70% :align center
+[[./img/carlos.jpg]]
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: <div class="column" style="float:right; width: 70%">
+- Engenharia Elétrica pela USP
+- Mestrado em Engenharia Ambiental
+- Engenheiro de Dados na Arquivei
+- LinkedIn: [[https://www.linkedin.com/in/carlos-medina-martinez/][carlos-medina-martinez]]
+#+REVEAL_HTML: </div>
+** Rodrigo Fonseca
+#+REVEAL_HTML: <div class="column" style="float:left; width: 30%">
+#+ATTR_HTML: :width 70% :align center
+[[./img/rodrigo.png]]
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: <div class="column" style="float:right; width: 70%">
+- Ciências da Computação pela USP
+- Físico frustrado
+- Especialista na Arquivei
+- LinkedIn: [[https://www.linkedin.com/in/rjfonseca/][rjfonseca]]
+#+REVEAL_HTML: </div>
+* O que é a Arquivei
+** Uma plataforma para documentos Fiscais
+NFe, CTe, CTeOS, MDFe, NFSe, NFCe, CFe/SAT...
+[[./img/o_arquivei.gif]]
+** Mais de 40 mil clientes
+[[./img/clientes.png]]
+** Como estamos organizados
+Somos mais de 350 pessoas!
+- Engenharia
+  - Plataforma DFe (⬅ você está aqui)
+  - Vários times de produto
+  - Times de apoio: SRE, QA, TechOps, ...
+- Outras áreas: RH, Financeiro, Customer, Sales...
+** Quantos documentos temos buscáveis
+#+REVEAL_HTML: <div class="column" style="float:left; width: 60%">
+- NFes
+  - 1,9 bilhão
+- CTe/CTeOS
+  - 800 milhões
+- NFSe
+  - 47 milhões
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: <div class="column" style="float:right; width: 40%">
+#+ATTR_HTML: :width 100% :align center
+[[./img/porcentagem_docs.png]]
+#+REVEAL_HTML: </div>
+** Qual o tamanho da nossa infra
+- ElasticSearch: 3 Clusters
+  - NFes - 13 nós / 4.8 TB
+  - CTe/CTeOS - 18 nós / 5.2 TB
+  - NFSe - 9 nós / 80 GB
+- Bigtable: 1 Instância
+  - 6 nós / 20.1 TB
+- BigQuery
+  - Dezenas de tabelas / 85 TB
+* Evolução da arquitetura de documentos
+** 👶 1ª Gen. - MVP
+[[./img/evolucao_arquitetura_1.png]]
+** 🏦 2ª Gen. - Multiplos bancos
+[[./img/evolucao_arquitetura_2.png]]
+** 🔬 3ª Gen. - Micro-serviços
+[[./img/evolucao_arquitetura_3.png]]
+** 🚀 4ª Gen. - Plataforma DFe
+[[./img/evolucao_arquitetura_4.png]]
+* Precisamos migrar 1 Bi documentos
+(Da 3ª -> 4ª geração)
+* Dificuldades de migrar um grande banco de dados
+- Minimizar Downtime
+- Garantir consistência
+- Inconsistências na base original
+- Auditoria
+* A grande migração
+** Como migrar 3ª -> 4ª geração
+#+ATTR_HTML: :width 70% :align center
+[[./img/passos_migracao_0.png]]
+*** 1. Ingestão assíncrona
+#+ATTR_HTML: :width 70% :align center
+[[./img/passos_migracao_1.png]]
+*** 2. Duplicar fluxo de ingestão
+#+ATTR_HTML: :width 70% :align center
+[[./img/passos_migracao_2.png]]
+*** 3. Sincronizar o passado
+#+ATTR_HTML: :width 70% :align center
+[[./img/passos_migracao_3.png]]
+*** 4. Chaveamento da API de busca
+#+ATTR_HTML: :width 70% :align center
+[[./img/passos_migracao_4.png]]
+*** 5. Desligar o legado
+#+ATTR_HTML: :width 70% :align center
+[[./img/passos_migracao_5.png]]
+** Lições aprendidas
+- Planeje seus gargalos
+- Passado sempre tem inconsistências
+- Auditar é difícil
+- Auditar é preciso
+- Automação, automação e automação
+* "Continuous Migration"
+** Por quê?
+- Troca ou teste de tecnologias
+- Correção do passado
+- Evolução das entidades
+- Evolução da arquitetura
+** Como fazemos
+#+REVEAL_HTML: <div class="column" style="float:left; width: 60%">
+- Orientada a eventos
+- Fonte de verdade simples
+- Dataflow
+- Redimensionamento de clusters
+- Automação
+- Red/green, Feature Flags ...
+- Shadowing
+- Monitoria
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: <div class="column" style="float:right; width: 40%">
+[[./img/como_fazemos.png]]
+#+REVEAL_HTML: </div>
+** Nossa última migração
+- 1,5 Bi em 7 dias ( < 24h na verdade )
+- BigTable -> Elastic: 3h
+  - Replicar BigTable: 20 min
+  - BigTable -> BigQuery: 1h 09 min
+  - BigQuery -> Elastic: 1h 41 min
+- Normalização do Cluster: 7h
+  - Resize: 2h
+  - Replicar dados: 4h 56 min
+- Consumir lag: 3h 40 min
+  - 7 dias de lag / 72,5 milhões
+- Payback: 2 meses
+* Perguntas
+** Obrigado
+** Estamos contratando
+#+ATTR_HTML: :align center
+[[./img/estamos_contratando.png]]
+https://arquivei.com.br/vagas
